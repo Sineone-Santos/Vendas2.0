@@ -1,0 +1,15 @@
+{
+    "name": "leonardo/framework_v2",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/",
+            "System\\": "Base/"
+        },
+        "files": [
+            "App/helpers/helpers.php"
+        ]
+    },
+    "require": {
+        "firebase/php-jwt": "^6.1"
+    }
+}

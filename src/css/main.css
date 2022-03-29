@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;500;600&display=swap');
+*{
+    font-family: 'sora', sans-serif;
+}
+
+html, body{
+    height: 100%;
+}
+.bg-gradient{
+    background-image: linear-gradient(135deg, #E76363, #E56085);
+}
+.form-group label{
+    font-weight: 700;
+    font-family: 'sora',sans-serif;
+}
+.form-group input{
+    background-color: #F2F2F2;
+}
+.btn-pink{
+    background-image: linear-gradient(90deg, #E76363, #E56085);
+    
+}
+i{
+    font-size: 20px;
+}
+h1{
+    font-size: 30px;
+}
+p{
+    font-family: 'sora', sans-serif;
+    font-weight: 200;
+}

@@ -1,0 +1,18 @@
+composer init
+
+editar arquivo composer.json
+fomato certo para adicionar o autoload(psr-4, files)
+composer dump-autoload
+adicionar no index vendor/autoload.php
+
+{
+    "autoload": {
+    	"psr-4": {
+	    "Controller\\": "App/Controller/",
+	},
+	"files": [
+	    "App/helpers/helper.php",
+	    "App/helpers/utils/teste.php"	
+	]
+    }
+}

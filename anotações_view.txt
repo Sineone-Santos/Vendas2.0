@@ -1,0 +1,50 @@
+function view($filename, $params = []) {
+    foreach($params as $key => $value) {
+        $$key = $value;
+    }
+    ob_start();
+    require 'views/'.$filename.'.php';
+    return ob_get_clean();
+}
+
+$user = [
+    'name'  => 'Sineone',
+    'class' => 'VIP'
+];
+
+$posts = [
+    [
+        'author' => 'Felipe',
+        'title'  => 'Como ficar rico fazendo nada'
+    ],
+    [
+        'author' => 'Felipe',
+        'title'  => 'Como ficar rico fazendo nada'
+    ],
+    [
+        'author' => 'Felipe',
+        'title'  => 'Como ficar rico fazendo nada'
+    ],
+    [
+        'author' => 'Felipe',
+        'title'  => 'Como ficar rico fazendo nada'
+    ]
+];
+
+
+<div class="container my-4">
+    <div class="row">
+        <?php foreach($posts as $post): ?>
+            <div class="col-lg-3 mb-3">
+                <?= view('components/card-dashboard', [ 'post' => $post ]) ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+$dashboard = view('template', [
+    'user'   => $user,
+    'content' =>  view('dashboard', [ 'posts' => $posts])
+]);
+
+echo $dashboard;
