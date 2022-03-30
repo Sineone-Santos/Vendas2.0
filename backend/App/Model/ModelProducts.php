@@ -4,42 +4,27 @@ namespace App\Model;
 
 use System\QueryBuilder;
 
-class Products
+class ModelProducts
 {
-    public function listProducts($idCategory = null, $idProduto = null)
+    public function findAllProducts()
     {
-        $params = [$_SESSION['userID']];
-
-        $sql = 'select 
-                    p.id,
-                    p.category_id,
-                    p.name
-                from category c inner join
-                products p on c.id = p.category_id
-                where c.user_id = ?' ;
-        if($idCategory){
-            $sql .= ' and p.category_id = ?';
-            $params[] = $idCategory;
-        }
-        $sql .= 'order by 1, 2';
+        $sql = 'select * from produtos';
         $sth = prepareSql($sql);
-        $sth->execute($params);
+        $sth->execute();
         $result = $sth->fetchAll();
         return $result;
     }
     public function insertProducts($list)
     {
-        $id = maxId('products');
-        $currentDate = dateNow();
-        $sql = 'insert into products(ID, NAME, CATEGORY_ID, IMG, CREATED_AT)
-                values (?, ?, ?, ?, ?)';
+        $id = maxId('PRODUTOS');
+        $sql = 'insert into PRODUTOS(ID, NOME, VALOR, ESTOQUE)
+                values (?, ?, ?, ?)';
         $sth = prepareSql($sql);
         $sth->execute([
             $id,
-            $list['name'],
-            $list['id_category'],
-            $list['img'],
-            $currentDate
+            $list['NOME'],
+            $list['ESTOQUE'],
+            $list['VALOR']
         ]);
         return $sth->fetch();
     }

@@ -14,16 +14,27 @@ class Users
         $result = $sth->fetch();
         return $result;
     }
-    public function insertUser($list){
+    public function insertClient($list){
 
-        $currentDate = dateNow();
         $id = maxID('USUARIOS');
-        $sql = 'insert into usuarios(ID, NAME, EMAIL, PASSWORD, TIPO_DE_CADASTRO, CEP, UF, 
+        $sql = 'insert into usuarios(ID, NAME, EMAIL, PASSWORD, TIPO_DE_USUARIO, CEP, UF, 
                 CIDADE, BAIRRO, LOGRADOURO, NUMERO)
-                values (?, ?, ?, ?, ?)';
+                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $sth = prepareSql($sql);
-        $sth->execute([$id, $list['name'],$list['email'], $list['password'], $currentDate]);
-        return $sth->fetch();
+        $sth->execute([
+                $id, 
+                $list['NAME'],
+                $list['EMAIL'], 
+                $list['PASSWORD'], 
+                $list['TIPO_DE_USUARIO'],
+                $list['CEP'],
+                $list['UF'],
+                $list['CIDADE'],
+                $list['BAIRRO'],
+                $list['LOGRADOURO'],
+                $list['NUMERO'],
+            ]);
+        return $id;
     }
     public function find($id){
         $sql = 'select * from USUARIOS x

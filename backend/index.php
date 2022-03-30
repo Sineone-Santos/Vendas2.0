@@ -28,17 +28,21 @@ $router->midleware('/admin', function () {
             $token = $value;
         }
     }
-    if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
-        $token = $match[1];
-        $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
-
-        $GLOBALS['user_id'] = $decode->sub;
-        if(!user()) {
-            http_response_code(401);
-            exit;
+    try{
+        if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
+            $token = $match[1];
+            $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
+    
+            $GLOBALS['user_id'] = $decode->sub;
+            if(!user() || user('TIPO_DE_USUARIO') != 'A') {
+                json(['msg'=> 'Usuario Não autorizado'], 401);
+            }
+        } else {
+            json(['msg'=> 'alterando  o token'], 401);
         }
-    } else {
-        http_response_code(403);
+    }catch(Exception $e){
+        echo $e->getMessage();
+        http_response_code(401);
         exit;
     }
 });
