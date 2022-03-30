@@ -4,14 +4,15 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use System\Router;
 
-session_start();
-$GLOBALS['erros'] = $_SESSION['erros'] ?? [];
-$GLOBALS['old'] = $_SESSION['old'] ?? [];
-unset($_SESSION['erros']);
-unset($_SESSION['old']);
+header('Access-Control-Allow-Origin: *');
+
+if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit;
+}
 
 $config = require 'config.php';
 require 'vendor/autoload.php';
+
 
 define('CONFIG', $config);
 define('BASE_URL', $config['base_url']);

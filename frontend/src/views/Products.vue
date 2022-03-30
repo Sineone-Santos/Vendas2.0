@@ -16,8 +16,8 @@ export default {
     },
     methods: {
         async listProducts() {
-            const produtos = await this.$axios.get('asdlkkasdklasdkla/asdkaskd')
-            this.produtos = produtos
+            const response = await this.$axios.get('products')
+            console.log(produtos);
         }
     }
 }
