@@ -5,11 +5,11 @@
             <div class="d-flex ml-auto align-items-center">
                 <div class="dropdown mr-3">
                     <button class="btn p-0 position-relative" data-toggle="dropdown">
-                        <span class="badge position-absolute badge-danger count-items">2</span>
+                        <span class="badge position-absolute badge-danger count-items">{{countItems}}</span>
                         <i class="fa fa-shopping-basket"></i>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <p>teste</p>
+                    <div class="dropdown-menu dropdown-menu-right container-cart" @click="$event.stopPropagation()">
+                        <cart-itens/>
                     </div>
                 </div>
                 <div class="dropdown mr-3">
@@ -20,18 +20,38 @@
                         <p>teste</p>
                     </div>
                 </div>                
-                <span>{{name}}</span>
+                <span>{{nameUser}}</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import CartItens from './CartItens.vue'
 export default {
+  components: { 
+      CartItens 
+    },
+    data(){
+        return{
+            countItems: 0,
+            nameUser: ''
+        }
+    },
     name: 'TopBar',
-    props: {
-        name: String
-    }
+   async created(){
+        this.countItems = JSON.parse(localStorage.getItem('produtos') || '[]').length
+        this.$root.$on('cart-update', itens => {
+            this.countItems = itens.length
+        }) 
+        if(localStorage.getItem('token')){  
+            const response = await this.$axios.get("/user");
+            this.nameUser = response.data.nome
+        }else{
+            this.nameUser = 'User'
+        }  
+    },
+    
 }
 </script>
 
@@ -50,5 +70,8 @@ a{
 }
 i{
     font-size: 22px;
+}
+.container-cart{
+    width: 350px;
 }
 </style>

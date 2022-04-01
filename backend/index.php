@@ -5,6 +5,7 @@ use Firebase\JWT\Key;
 use System\Router;
 
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: *');
 
 if($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
@@ -47,5 +48,30 @@ $router->midleware('/admin', function () {
         exit;
     }
 });
-
+$router->midleware('/user', function () {
+    $headers = apache_request_headers();
+    $token = '';
+    foreach ($headers as $header => $value) {
+        if($header == 'Authorization'){
+            $token = $value;
+        }
+    }
+    try{
+        if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
+            $token = $match[1];
+            $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
+    
+            $GLOBALS['user_id'] = $decode->sub;
+            if(!user()) {
+                json(['msg'=> 'Usuario Não autorizado'], 401);
+            }
+        } else {
+            json(['msg'=> 'alterando  o token'], 401);
+        }
+    }catch(Exception $e){
+        echo $e->getMessage();
+        http_response_code(401);
+        exit;
+    }
+});
 $router->run();

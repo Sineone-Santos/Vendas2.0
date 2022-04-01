@@ -70,14 +70,7 @@ class User
             json(['erros'=>$erros], 400);
         }
     }
+    public function show(){
+        return json(['nome'=> user()['NAME']], 200);
+    }
 }
-
-// if(user('active') == 'S') {
-//     if(user('account_type') == 'client') {
-
-//     } else if(user('account_type') == 'admnin') {
-
-//     }
-// } else {
-//     redirect('auth/login');
-// }

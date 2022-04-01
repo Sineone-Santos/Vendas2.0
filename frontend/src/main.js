@@ -9,10 +9,19 @@ const axiosConfig = {
   timeout: 30000,
 };
 
-Vue.prototype.$axios = axios.create(axiosConfig)
+const $axios = axios.create(axiosConfig)
+
+$axios.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if(token){
+    config.headers['Authorization'] = 'Bearer '+token;
+  }
+  return config;
+})
+
+Vue.prototype.$axios = $axios;
 
 new Vue({
   router,
   render: h => h(App)  
 }).$mount('#app')
-
