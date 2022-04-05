@@ -6,8 +6,10 @@ class Request{
 
     private $param = [];
 
+
     public function __construct()
     {
+        
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == 'GET'){
@@ -16,7 +18,8 @@ class Request{
 
         }else{
             if(count($_POST) == 0){
-                $content = file_get_contents('php//input');
+
+                $content = file_get_contents('php://input');
                 if($content){
                     $this->param = json_decode($content, true);
                 }

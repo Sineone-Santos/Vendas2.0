@@ -59,8 +59,10 @@ $router->midleware('/user', function () {
     try{
         if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
             $token = $match[1];
+            
             $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
-    
+            print_r($decode);
+            exit;
             $GLOBALS['user_id'] = $decode->sub;
             if(!user()) {
                 json(['msg'=> 'Usuario Não autorizado'], 401);

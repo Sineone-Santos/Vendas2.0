@@ -8,7 +8,7 @@ class Users
     public function findByEmail($email)
     {
         $sql = 'select * from USUARIOS x
-                where x.email = ?';    
+                where x.email = ?';  
         $sth = prepareSql($sql);
         $sth->execute([$email]);
         $result = $sth->fetch();

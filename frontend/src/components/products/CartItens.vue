@@ -15,13 +15,12 @@
                 </div>
             </div>
             <div class="w-100 d-flex justify-content-center">
-                <button class="btn btn-primary col-8">Confirmar</button>
+                <button class="btn btn-primary col-8" @click="$router.push({name: 'Login'})">Confirmar</button>
             </div>
         </template>
         <div v-else>
             <p class="mb-0 m-2 text-center">Nenhum item adicionado</p>
         </div>
-
     </div>
 </template>
 

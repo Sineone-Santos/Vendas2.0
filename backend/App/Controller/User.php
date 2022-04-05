@@ -10,24 +10,28 @@ class User
 
     public function login(Request $req)
     {
-        $pass  = $req->get("PASSWORD");
-        $email = $req->get('EMAIL');
-        $obj   = new Users();
-        $user  = $obj->findByEmail($email);
-        if (!$user) {
-            $_SESSION['msg'] = 'Dados Invalidos!';
-            $_SESSION['EMAIL'] = $email;
-        }
+       
+       $email= $req->get('email');
+       $pass = $req->get('password');
 
-        if (password_verify($pass, $user['PASSWORD'])) {
+       if(!$email || !$pass){
+        return json(['error' => 'algun dos campo não foi preenchido']);
+       }
+       $verify = new Users();
+       $user = $verify->findByEmail($email);
+       if(!$user){
+           return json(['error' => 'Dados Inválido @@@@   email  @@@@@']);
+       }
+       if(password_verify($pass, $user['PASSWORD'])){
             $token = gerarToken($user['ID']);
-            json(['token'=> $token]);
-        } else {
-            http_response_code(400);
-            $_SESSION['msg'] = 'Dados Invalidos!!';
-            $_SESSION['EMAIL'] = $email;
-
+            json([
+                'success'=> true,
+                'token'=> $token,
+                'user' => $user['NAME']
+                ] );
         }
+        return json(['error' => 'dados invalidos @@@@@   senha   @@@@@']);
+     
     }
     public function registerClient(Request $req)
     {
