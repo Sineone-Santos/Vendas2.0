@@ -1,11 +1,8 @@
 import Vue from 'vue'
-import Vuex from './vuex'
 import App from './App.vue'
 import router from './router'
-import actionsUser from './store/actions.user'
-import commitUser from './store/mutations.user'
+import store from './store'
 
-Vue.use(Vuex)
 
 Vue.config.productionTip = false
 
@@ -26,24 +23,8 @@ $axios.interceptors.request.use(config => {
 
 Vue.prototype.$axios = $axios;
 
-const store = new Vuex.Store({
-    state: {
-        auth: false,
-        nameUser: 'user'
-    },
-    mutations: {
-      ...commitUser
-    },
-    actions: {
-      ...actionsUser
-    },
-    getters: {
-
-    }
-})
-
 new Vue({
-  store: store,
+  store,
   router,
   render: h => h(App)  
 }).$mount('#app')

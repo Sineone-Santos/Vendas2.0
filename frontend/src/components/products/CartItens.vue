@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="w-100 d-flex justify-content-center">
-                <button class="btn btn-primary col-8" @click="$router.push({name: 'Login'})">Confirmar</button>
+                <button class="btn btn-primary col-8" @click="verifyToken()">Confirmar</button>
             </div>
         </template>
         <div v-else>
@@ -56,8 +56,15 @@ export default {
             if(this.items[indexItem].qtd == 0){
                 this.items.splice(indexItem, 1)
                 localStorage.setItem('produtos', JSON.stringify(this.items))
+                this.$root.$emit('cart-update', this.items)
             }
-            
+        },
+        verifyToken(){
+            if(!localStorage.getItem('token')){
+                this.$router.push({name: 'Login'})
+            }else{
+                alert('ja esta logado');
+            }
         }
 
     }

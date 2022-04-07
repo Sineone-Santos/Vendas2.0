@@ -65,7 +65,7 @@ export default {
     },
     created(){
         this.$store.dispatch('VERIFY.USER')
-        if(this.$store.state.auth === true){
+        if(this.$store.state.auth == true){
             this.$root.$router.push({name: 'produtos'})
         }
     },
@@ -85,7 +85,9 @@ export default {
         }else{
             console.log(response.data);
             localStorage.setItem('token', JSON.stringify(response.data.token))  
-            //this.$root.$router.push({name: 'produtos'})
+            this.$store.state.auth = true
+            this.$store.state.nameUser = response.data.nome;
+            this.$root.$router.push({name: 'produtos'})
         }
     }
 }

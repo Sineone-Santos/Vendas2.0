@@ -19,7 +19,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <div class="d-flex flex-column" v-if="auth == true">
-                            <button class="btn btn-outline-primary border-bottom border-0">
+                            <button @click="$router.push({name: 'Perfil'})" class="btn btn-outline-primary border-bottom border-0">
                                 meus pedidos
                             </button>
                             <button class="btn btn-outline-primary border-bottom border-0">
@@ -55,12 +55,19 @@ export default {
     data(){
         return{
             countItems: 0,
-            auth: false,
-            nameUser: ''
+            auth: Boolean,
+            nameUser: 'user'
         }
     },
-    created(){
-              
+    async created(){
+        this.$store.dispatch('VERIFY.USER')
+        if(this.$store.state.auth == true){
+            const response = await this.$axios.get('/user')     
+            this.$store.state.nameUser = response.data.nome
+        }else{        
+            this.auth = this.$store.state.auth
+            this.nameUser = this.$store.state.nameUser
+        }
     },
     name: 'TopBar',
     mounted(){
@@ -68,7 +75,7 @@ export default {
         this.$root.$on('cart-update', itens => {
             this.countItems = itens.length
         }) 
-       this.$store.dispatch('VERIFY.USER')
+
     },
     computed: {
         verifyUser(){
@@ -83,11 +90,11 @@ export default {
             this.$store.dispatch('VERIFY.USER')
         },
     },
-    watch: {
-        'verifyUser'(newValue, oldValue){
-            console.log(newValue, oldValue)
-        }
-    }
+    // watch: {
+    //     'verifyUser'(newValue, oldValue){
+    //         console.log(newValue, oldValue)
+    //     }
+    // }
    
 }
 </script>

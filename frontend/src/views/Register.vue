@@ -7,7 +7,7 @@
                 <div class="row no-gutters shadow-lg">
                     <div class="col-6 border-left-0 rounded-left">
                         <div class="h-100 py-3">
-                            <form id="form-register" class="m-4">
+                            <div id="form-register" class="m-4">
                                 <div class="d-flex align-items-center">
                                     <h1 class="font-weight-normal mb-4">Cadastrar</h1>
                                     <div class="ml-auto text-muted">
@@ -17,24 +17,23 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="text-monospace">email</label>
-                                    <input type="text" name="email" class="form-control form-control-sm border-0 rounded-pill p-3 " placeholder="email">
-                                    <span class="invalid-feedback"></span>
+                                    <input v-on:keyup="removeClass($event)"  v-model="email" type="text" name="email" class="form-control form-control-sm border-0 rounded-pill p-3 " placeholder="email">
+                                    <span class="invalid-feedback">{{invalidFeedbackemail}}</span>
                                 </div>
                                 <div class="form-group">
                                     <label class="text-monospace">Nome</label>
-                                    <input type="text" name="name" class="form-control form-control-sm border-0 rounded-pill p-3" placeholder="Nome">
-                                    <span class="invalid-feedback"></span>
+                                    <input v-model="nome" v-on:keyup="removeClass($event)" type="text" name="nome" class="form-control form-control-sm border-0 rounded-pill p-3" placeholder="Nome">
+                                    <span class="invalid-feedback">{{invalidFeedbacknome}}</span>
                                 </div>
                                 <div class="form-group">
                                     <label class="text-monospace">Senha</label>
-                                    <input type="password" name="password" class="form-control form-control-sm border-0 rounded-pill p-3 " placeholder="Senha">
-                                    <span class="invalid-feedback"></span>
+                                    <input v-on:keyup="removeClass($event)" v-model="password" type="password" name="password" class="form-control form-control-sm border-0 rounded-pill p-3 " placeholder="Senha">
+                                    <span class="invalid-feedback">{{invalidFeedbackPassword}}</span>
                                 </div>
                                 <div class="d-flex justify-content-center">
-                                    <button class="btn btn-pink rounded-pill w-100 text-white text-center">Cadastrar</button>
+                                    <button @click="newUser()" class="btn btn-primary rounded-pill w-100 text-white text-center">Cadastrar</button>
                                 </div>
-
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <div class="col-6 bg-gradient border-right-0 rounded-right ">
@@ -56,10 +55,65 @@ import TopBar from '@/components/products/TopBar.vue'
 import NavBar from '@/components/products/NavBar.vue'
 
 export default {
-  components: {
-    TopBar,
-    NavBar
-  }
+    components: {
+        TopBar,
+        NavBar
+    },
+    data(){
+        return{
+            nome: '',
+            email: '',
+            password: '', 
+            invalidFeedbackPassword: '',
+            invalidFeedbackemail: '',
+            invalidFeedbacknome: ''
+        }
+    },
+    created(){
+      if(localStorage.getItem('token')){
+            this.$root.$router.push({name: 'produtos'})
+        }
+    },
+    computed: {
+      
+    },
+    methods:{
+      async  newUser(){
+            let dados = {
+                'nome': this.nome,
+                'email': this.email,
+                'password': this.password
+            }
+            if(this.verifyDados(dados)){
+                const response = await this.$axios.post('/auth/register', dados)
+                localStorage.setItem('token', JSON.stringify(response.data.token))  
+                this.$store.state.auth = true
+                this.$store.state.nameUser = response.data.nome;
+                this.$root.$router.push({name: 'produtos'})
+            }
+        },
+        removeClass(ev){      
+            if(ev.target.classList.contains('is-invalid')){
+                ev.target.classList.remove('is-invalid')
+            }
+        },
+        verifyDados(dados){
+            let result
+            Object.entries(dados).forEach(item =>{
+                if(item[1] == ''){              
+                    document.getElementsByName(item[0])[0].classList.add('is-invalid')
+                    alert('o campo '+item[0]+' deve ser preenchido')
+                    result = false
+                } 
+                if(item[0] == 'password' && item[1].length <= 7){
+                    this.invalidFeedbackPassword = 'A senha deve conter no minimo 8 caracteres'
+                    document.getElementsByName(item[0])[0].classList.add('is-invalid')   
+                    result = false ;
+                }
+            })
+            return result == false ? result : true
+        }
+    }
 }
 
     NavBar
