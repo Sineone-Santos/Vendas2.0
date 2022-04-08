@@ -10,7 +10,6 @@ export default {
             }
            await commit('VERIFY_USER', payload)
         }else{
-            console.log(this)
             payload = {
                 'auth': true,
                 'nameUser': ''

@@ -60,15 +60,14 @@ export default {
             }
         },
         verifyToken(){
-            if(!localStorage.getItem('token')){
-                this.$router.push({name: 'Login'})
+            this.$store.dispatch('VERIFY.USER')
+            if(this.$store.state.auth == true){
+                this.$router.push({name: 'Checkout'})
             }else{
-                alert('ja esta logado');
+                this.$router.push({name: 'Login'})
             }
         }
-
     }
-
 }
 
 

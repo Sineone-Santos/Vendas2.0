@@ -4,6 +4,8 @@ import Products from '../views/Products.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Perfil from '../views/Perfil.vue';
+import Checkout from '../views/Checkout.vue';
+import Boleto from '../views/Boleto.vue';
 
 Vue.use(VueRouter)
 
@@ -12,11 +14,6 @@ const routes = [
     path: '/',
     name: 'produtos',
     component: Products
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
     path: '/auth/login',
@@ -32,6 +29,16 @@ const routes = [
     path: '/user/perfil',
     name: 'Perfil',
     component: Perfil
+  },
+  {
+    path: '/user/checkout',
+    name: 'Checkout',
+    component: Checkout
+  },
+  {
+    path: '/user/Boleto',
+    name: 'Boleto',
+    component: Boleto
   }
 ]
 
