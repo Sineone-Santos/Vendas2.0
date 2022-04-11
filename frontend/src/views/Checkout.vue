@@ -38,8 +38,8 @@
                                     <div class="d-flex flex-column mt-4" style="max-width: 200px">
                                         <select v-model="formaPagamento" class="form-control form-control-sm" name="forma-pagamento">
                                             <option value="CT">Cartão de credito</option>
-                                            <option value="Boleto">Boleto</option>
-                                            <option value="Pix">Pix</option>
+                                            <option value="BO">Boleto</option>
+                                            <option value="PIX">Pix</option>
                                         </select>
                                     </div>
                                     <div v-if="formaPagamento == 'CT'">
@@ -57,22 +57,29 @@
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                             <div class="form-group col-6">
+                                             <div class="form-group col-5">
                                                 <label>Validade</label>
-                                                <input v-model="validade" type="text" class="form-control">
+                                                <input v-model="validade" type="month" class="form-control">
                                             </div>
-                                            <div class="d-flex flex-row align-items-center col-4">
-                                                <div class="form-group col-6">
+                                            <div class="col-3">
+                                                <div class="form-group">
                                                     <label>CVV</label>
-                                                    <input v-model="cvv" type="text" class="form-control">
+                                                    <input v-model="cvv" type="text" class="form-control" maxlength="4">
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label>Parcelas</label>
+                                                    <select v-model="parcelas" class="form-control form-control" name="forma-pagamento">
+                                                        <option value="1">1x</option>
+                                                        <option value="2">2x</option>
+                                                        <option value="3">3x</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-primary">Finalizar Pedido</button>
-                                        </div>
                                     </div>
-                                    <div v-else-if="formaPagamento == 'Pix'">
+                                    <div v-else-if="formaPagamento == 'PIX'">
                                         <div class="row">
                                             <div class="col-5">
                                                 <figure class="figure">
@@ -107,6 +114,9 @@
                 </div>
                 <div class="col-4">
                     <cart-itens/>
+                    <div class="d-flex justify-content-center mt-2">
+                        <button @click="finishPedido()" class="btn btn-primary">Finalizar Pedido</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,6 +139,7 @@ export default {
     },
     data(){
         return{
+            parcelas: 0,
             formaPagamento: 'CT',
             numeroCartao: '',
             nome: '',
@@ -137,11 +148,12 @@ export default {
             chavePix: 'dsnfsdnfklsnfklsdanskalf5df531sa6f46f16sdf4af46ds4f6d4sfd6sa54f6saf6d5f4dsa6fa4sf54'
         }
     },
-    created(){
+    async created(){
         this.$store.dispatch('VERIFY.USER')
         if(this.$store.state.auth == false){
             this.$root.$router.push({name: 'Login'})
         }
+        
     },
     computed: {
         creditCardT(){
@@ -157,6 +169,14 @@ export default {
         },
         gerarBoleto(){
             this.$router.push({name: 'Boleto'})
+        },
+        async finishPedido(){
+            let dados = {
+                'formaPagamento': this.formaPagamento,
+                'parcelas': this.parcelas
+            }
+            const response = await this.$axios.post('user/venda', dados)
+            console.log(response)
         }
     }
 }

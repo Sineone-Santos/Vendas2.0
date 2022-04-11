@@ -34,7 +34,7 @@ $router->midleware('/admin', function () {
         if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
             $token = $match[1];
             $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
-    
+            
             $GLOBALS['user_id'] = $decode->sub;
             if(!user() || user('TIPO_DE_USUARIO') != 'A') {
                 json(['msg'=> 'Usuario Não autorizado'], 401);
@@ -50,6 +50,7 @@ $router->midleware('/admin', function () {
 });
 $router->midleware('/user', function () {
     $headers = apache_request_headers();
+
     $token = '';
     foreach ($headers as $header => $value) {
         if($header == 'Authorization'){
@@ -58,11 +59,10 @@ $router->midleware('/user', function () {
     }
     try{
         if($token && preg_match('/^Bearer (.+)/', $token, $match)) {
-            $token = $match[1];
+            $token = str_replace('"', "",$match[1]);
             
             $decode = JWT::decode($token, new Key(CONFIG['jwt_key'], 'HS256'));
-            print_r($decode);
-            exit;
+            
             $GLOBALS['user_id'] = $decode->sub;
             if(!user()) {
                 json(['msg'=> 'Usuario Não autorizado'], 401);

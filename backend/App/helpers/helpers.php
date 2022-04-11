@@ -46,7 +46,6 @@ function gerarToken($user_id){
     $payload = array(
         "iss" => "localhost",
         "sub" => $user_id,
-        "exp" => time() + 1000
     );
     return JWT::encode($payload, $key, 'HS256');
 }

@@ -29,33 +29,35 @@ class User
                 'token'=> $token,
                 'user' => $user['NAME']
                 ] );
+        }else{
+            return json(['error' => 'dados invalidos @@@@@   senha   @@@@@']);
         }
-        return json(['error' => 'dados invalidos @@@@@   senha   @@@@@']);
+        
      
     }
     public function registerClient(Request $req)
     {
         $list = [
-            'EMAIL'            => $req->get('EMAIL'),
-            'PASSWORD'         => password_hash($req->get('PASSWORD'), PASSWORD_BCRYPT),
-            'NAME'             => $req->get('NAME'),
+            'EMAIL'            => $req->get('email'),
+            'PASSWORD'         => password_hash($req->get('password'), PASSWORD_BCRYPT),
+            'NAME'             => $req->get('nome'),
             'TIPO_DE_USUARIO'  => 'C',
-            'CEP'              => $req->get('CEP'),
-            'UF'               => $req->get('UF'),
-            'CIDADE'           => $req->get('CIDADE'),
-            'BAIRRO'           => $req->get('BAIRRO'),
-            'LOGRADOURO'       => $req->get('LOGRADOURO'),
-            'NUMERO'           => $req->get('NUMERO'),
+            'CEP'              => '',
+            'UF'               => '',
+            'CIDADE'           => '',
+            'BAIRRO'           => '',
+            'LOGRADOURO'       => '',
+            'NUMERO'           => '',
         ];
         $erros = [];
 
-        if (strlen($req->get('PASSWORD')) <= 3) {
-            $erros['PASSWORD'] = 'a senha deve conter mais de 4 digitos';
+        if (strlen($req->get('password')) <= 7) {
+            $erros['PASSWORD'] = 'a senha deve conter no minimo 8 caracteres';
         }
-        if (strlen($req->get('NAME')) >= 50 || strlen($req->get('NAME')) <= 5) {
+        if (strlen($req->get('nome')) >= 50 || strlen($req->get('nome')) <= 5) {
             $erros['NAME'] = 'o nome deve possuir entre 6 e 49 caracteres';
         }
-        if (!filter_var($req->get('EMAIL'), FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($req->get('email'), FILTER_VALIDATE_EMAIL)) {
             $erros['EMAIL'] = 'formato de email invalido';
         }
         
@@ -65,7 +67,10 @@ class User
             if (!$user) {
                 $id = $obj->insertClient($list);
                 $token = gerarToken($id);
-                json(['token'=> $token]);
+                json([
+                    'token'=> $token,
+                    'nome'=> $list['NAME']
+                ]);
             } else {
                 $erros['EMAIL'] = 'Email ja cadastrado';
             }

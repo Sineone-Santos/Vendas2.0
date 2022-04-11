@@ -1,5 +1,8 @@
 <template>
-    <div class="w-100"> 
+    <div class="w-100">
+        <div class="w-100" v-if="verifyUrl">
+            <h1>teste</h1>
+        </div>
         <template v-if="items.length">
             <div class="d-flex m-4 border-top border-bottom py-4" v-for="item in items" :key="item.id">
                 <div class="d-flex">
@@ -14,17 +17,7 @@
                     <b class="ml-2">{{ formatMoney(item.valor * item.qtd) }}</b>
                 </div>
             </div>
-            <div class="w-100 d-flex flex-column" v-if="verifyUrl">
-                <div class="d-flex m-2">
-                    <p class="mb-1">Frete</p>
-                    <p class="ml-auto mb-1">R$0,00</p>
-                </div>
-                <div class="d-flex m-2">
-                    <p class="mb-1">total</p>
-                    <p class="ml-auto mb-1">{{totalPagar}}</p>
-                </div>
-            </div>
-            <div v-else class="w-100 d-flex justify-content-center">
+            <div class="w-100 d-flex justify-content-center">
                 <button class="btn btn-primary col-8" @click="verifyToken()">Confirmar</button>
             </div>
         </template>
@@ -44,35 +37,17 @@ export default {
     },
     created(){
         this.items = JSON.parse(localStorage.getItem('produtos') || '[]')
-        console.log(localStorage.getItem('produtos'))
         this.$root.$on('cart-update', itens => {
             this.items = itens;
         })        
     },
-    mounted(){
-
-    },
     computed: {
-        verifyUrl(){          
-            this.url = window.location.pathname
+        verifyUrl(){
+            this.url == window.location.pathname
             if(this.url == '/user/checkout'){
                 return true
             }else{
                 return false
-            }
-        },
-        totalPagar(){
-            if(this.items.length == 1){
-                console.log('aqui');
-               // return this.items[0].valor * this.items[0].qtd
-            }else{
-                //console.log(this.items)
-                // let pagar = this.items[0].reduce((acc, at)=>{    
-                //    //console.log(this.items)                          
-                //    return (parseFloat(acc.valor) * parseFloat(acc.qtd)) + (parseFloat(at.valor) * parseFloat(at.qtd))
-                // })
-                //console.log(pagar);
-                //return 'R$ '+pagar
             }
         }
     },
